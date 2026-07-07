@@ -703,6 +703,18 @@ function renderTable() {
   }).join('');
 }
 
+function getOrders() {
+  if (typeof Orders !== 'undefined' && Orders.getAll) {
+    return Orders.getAll();
+  }
+  try {
+    const raw = localStorage.getItem('ariana_orders_v1');
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
 function filterOrders(orders) {
   const now = new Date();
   return orders.filter(o => {
@@ -715,7 +727,7 @@ function filterOrders(orders) {
 }
 
 function renderSales() {
-  const allOrders     = Orders.getAll();
+  const allOrders     = getOrders();
   const filtered      = filterOrders(allOrders);
   const totalRevenue  = filtered.reduce((s, o) => s + o.grandTotal, 0);
   const totalSold     = filtered.reduce((s, o) => {
@@ -939,7 +951,11 @@ function resetToDefault() {
 
 function clearOrders() {
   if (!confirm('تمام سوابق فروش پاک می‌شوند. ادامه می‌دهید؟')) return;
-  Orders.clearAll();
+  if (typeof Orders !== 'undefined' && Orders.clearAll) {
+    Orders.clearAll();
+  } else {
+    localStorage.setItem('ariana_orders_v1', JSON.stringify([]));
+  }
   showToast('سوابق فروش پاک شد');
   renderSales();
 }
