@@ -126,7 +126,7 @@ const DEFAULT_MENU = [
     desc: 'سیب‌زمینی ترد با نمک دریا و سس چیلی',
     price: 65000,
     badge: '',
-    img: ''
+    img: 'https://uploadkon.ir/uploads/aa9807_26سیب‌زمینی-سوخاری.jpg'
   },
   {
     id: 15,
