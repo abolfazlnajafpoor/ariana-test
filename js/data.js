@@ -126,7 +126,7 @@ const DEFAULT_MENU = [
     desc: 'سیب‌زمینی ترد با نمک دریا و سس چیلی',
     price: 65000,
     badge: '',
-    img: 'https://uploadkon.ir/uploads/aa9807_26سیب‌زمینی-سوخاری.jpg'
+    img: ''
   },
   {
     id: 15,
@@ -226,15 +226,6 @@ const DEFAULT_MENU = [
     price: 98000,
     badge: 'new',
     img: 'https://uploadkon.ir/uploads/747307_26میلک-شیک-اوریو.jpg'
-  },
-   {
-    id: 26,
-    cat: 'dessert',
-    name: 'چیتوز موتوری',
-    desc: 'پفک',
-    price: 45000,
-    badge: 'new',
-    img: 'https://uploadkon.ir/uploads/b58707_26چیتوز-موتوری.jpg'
   }
 ];
 
@@ -307,43 +298,71 @@ const DB = (() => {
 const Orders = (() => {
 
   function getAll() {
-    const raw = localStorage.getItem(STORAGE_KEY_ORDERS);
-    return raw ? JSON.parse(raw) : [];
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY_ORDERS);
+      if (!raw) {
+        save([]);
+        return [];
+      }
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      save([]);
+      return [];
+    }
   }
 
   function save(orders) {
-    localStorage.setItem(STORAGE_KEY_ORDERS, JSON.stringify(orders));
+    try {
+      localStorage.setItem(STORAGE_KEY_ORDERS, JSON.stringify(orders));
+    } catch (e) {
+      console.error('خطا در ذخیره سفارشات:', e);
+    }
   }
 
   function addOrder(cartItems) {
-    const orders = getAll();
-    const now    = new Date().toISOString();
-    const items  = Object.values(cartItems).map(it => ({
-      id:    it.id,
-      name:  it.name,
-      cat:   it.cat,
-      price: it.price,
-      qty:   it.qty,
-      total: it.price * it.qty
-    }));
-    const order = {
-      orderId:    Date.now(),
-      timestamp:  now,
-      items:      items,
-      grandTotal: items.reduce((s, i) => s + i.total, 0)
-    };
-    orders.push(order);
-    save(orders);
-    return order;
+    try {
+      const orders = getAll();
+      const now    = new Date().toISOString();
+      const items  = Object.values(cartItems).map(it => ({
+        id:    it.id,
+        name:  it.name,
+        cat:   it.cat,
+        price: it.price,
+        qty:   it.qty,
+        total: it.price * it.qty
+      }));
+      
+      if (items.length === 0) {
+        console.error('سبد خرید خالی است');
+        return null;
+      }
+      
+      const order = {
+        orderId:    Date.now(),
+        timestamp:  now,
+        items:      items,
+        grandTotal: items.reduce((s, i) => s + i.total, 0)
+      };
+      
+      orders.push(order);
+      save(orders);
+      console.log('سفارش با موفقیت ثبت شد:', order);
+      return order;
+    } catch (e) {
+      console.error('خطا در ثبت سفارش:', e);
+      return null;
+    }
   }
 
   function clearAll() {
     save([]);
   }
 
-  return { getAll, addOrder, clearAll };
+  return { getAll, save, addOrder, clearAll };
 
 })();
 
-localStorage.removeItem(STORAGE_KEY_MENU);
-localStorage.removeItem(STORAGE_KEY_ORDERS);
+console.log('✅ data.js بارگذاری شد');
+console.log('📦 تعداد آیتم‌های منو:', DB.getAll().length);
+console.log('📋 تعداد سفارشات:', Orders.getAll().length);
