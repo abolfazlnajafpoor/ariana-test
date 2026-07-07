@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>پنل ادمین — کافه آریانا</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Vazirmatn', sans-serif; background: var(--color-bg); color: var(--color-text); direction: rtl; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+    .layout { display: flex; min-height: 100vh; }
+
+    .side-nav { width: 220px; background: #111; border-left: 1px solid #ffffff0a; display: flex; flex-direction: column; padding: 1.5rem 0; position: sticky; top: 0; height: 100vh; flex-shrink: 0; }
+    .brand { padding: 0 1.25rem 1.5rem; border-bottom: 1px solid #ffffff08; margin-bottom: 1rem; }
+    .brand h1 { font-size: 1.15rem; font-weight: 800; color: var(--color-gold); }
+    .brand p  { font-size: 0.68rem; color: var(--color-muted); margin-top: 0.2rem; }
+
+    .nav-btn { display: flex; align-items: center; gap: 0.65rem; padding: 0.65rem 1.25rem; color: var(--color-muted); font-size: 0.88rem; cursor: pointer; border: none; background: none; font-family: inherit; width: 100%; text-align: right; border-right: 3px solid transparent; transition: all 0.18s; }
+    .nav-btn:hover  { color: var(--color-text); background: #ffffff05; }
+    .nav-btn.active { color: var(--color-gold); border-right-color: var(--color-gold); background: rgba(201,168,76,.07); font-weight: 600; }
+    .nav-sep { height: 1px; background: #ffffff08; margin: 0.6rem 1.25rem; }
+    .nav-footer { margin-top: auto; padding: 0 1.25rem 0.5rem; }
+    .nav-footer a { display: flex; align-items: center; gap: 0.5rem; color: var(--color-muted); font-size: 0.82rem; text-decoration: none; padding: 0.5rem 0; transition: color 0.18s; }
+    .nav-footer a:hover { color: var(--color-gold); }
+
+    .main { flex: 1; padding: 2rem 2rem 3rem; overflow-y: auto; }
+
+    .page-hd { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem; }
+    .page-hd h2   { font-size: 1.5rem; font-weight: 800; }
+    .page-hd span { font-size: 0.85rem; color: var(--color-muted); display: block; margin-top: 0.2rem; }
+
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 0.9rem; margin-bottom: 1.75rem; }
+    .stat-card { background: #161616; border: 1px solid #ffffff08; border-radius: 12px; padding: 1.1rem 1.2rem; }
+    .sc-val   { font-size: 1.7rem; font-weight: 900; color: var(--color-gold); line-height: 1; }
+    .sc-label { font-size: 0.72rem; color: var(--color-muted); margin-top: 0.3rem; }
+
+    .btn { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.55rem 1.1rem; border-radius: 8px; font-family: inherit; font-size: 0.88rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.18s; white-space: nowrap; }
+    .btn-primary { background: var(--color-gold); color: #000; }
+    .btn-primary:hover { background: var(--color-gold-lt); transform: translateY(-1px); }
+    .btn-danger  { background: #7a1c1c; color: #fff; }
+    .btn-danger:hover  { background: #9b2020; }
+    .btn-ghost   { background: #ffffff0e; color: var(--color-text); }
+    .btn-ghost:hover   { background: #ffffff18; }
+    .btn-sm { padding: 0.3rem 0.7rem; font-size: 0.78rem; }
+
+    .table-card { background: #161616; border: 1px solid #ffffff08; border-radius: 14px; overflow: hidden; }
+    .table-toolbar { display: flex; align-items: center; gap: 0.75rem; padding: 0.9rem 1.1rem; border-bottom: 1px solid #ffffff07; flex-wrap: wrap; }
+    .search-wrap { display: flex; align-items: center; gap: 0.4rem; background: #0D0D0D; border: 1px solid #ffffff10; border-radius: 8px; padding: 0.38rem 0.75rem; flex: 1; min-width: 160px; max-width: 260px; }
+    .search-wrap input { background: none; border: none; outline: none; color: var(--color-text); font-family: inherit; font-size: 0.88rem; width: 100%; }
+    .search-wrap input::placeholder { color: var(--color-muted); }
+    .sel { background: #0D0D0D; border: 1px solid #ffffff10; border-radius: 8px; padding: 0.38rem 0.75rem; color: var(--color-text); font-family: inherit; font-size: 0.85rem; outline: none; cursor: pointer; }
+    .sel option { background: #1a1a1a; }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead th { background: #0f0f0f; padding: 0.65rem 1rem; font-size: 0.75rem; font-weight: 600; color: var(--color-muted); text-align: right; white-space: nowrap; letter-spacing: 0.03em; }
+    tbody tr { border-bottom: 1px solid #ffffff05; transition: background 0.12s; }
+    tbody tr:hover { background: #ffffff03; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody td { padding: 0.65rem 1rem; font-size: 0.86rem; vertical-align: middle; }
+    .thumb { width: 46px; height: 46px; border-radius: 8px; object-fit: cover; background: #222; display: block; }
+    .thumb-placeholder { width: 46px; height: 46px; border-radius: 8px; background: #2a2a2a; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--color-muted); }
+    .pill { display: inline-block; padding: 0.18rem 0.55rem; border-radius: 99px; font-size: 0.7rem; font-weight: 600; }
+    .pill-cat     { background: rgba(201,168,76,.12); color: var(--color-gold); }
+    .pill-popular { background: rgba(139,32,32,.25); color: #f87171; }
+    .pill-new     { background: rgba(46,107,79,.25); color: #6ee7b7; }
+    .pill-none    { background: #ffffff08; color: var(--color-muted); }
+    .row-actions  { display: flex; gap: 0.35rem; }
+    .empty-td { text-align: center; padding: 3rem; color: var(--color-muted); font-size: 0.9rem; }
+
+    .modal-wrap { position: fixed; inset: 0; background: rgba(0,0,0,.72); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.22s; }
+    .modal-wrap.open { opacity: 1; pointer-events: all; }
+    .modal { background: #1c1c1c; border: 1px solid #ffffff0e; border-radius: 16px; width: 100%; max-width: 500px; max-height: 92vh; overflow-y: auto; transform: translateY(18px); transition: transform 0.22s; }
+    .modal-wrap.open .modal { transform: translateY(0); }
+    .modal-hd { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.4rem; border-bottom: 1px solid #ffffff08; }
+    .modal-hd h3 { font-size: 1.05rem; font-weight: 700; }
+    .modal-close { background: none; border: none; cursor: pointer; color: var(--color-muted); font-size: 1.2rem; transition: color 0.18s; padding: 0.2rem; }
+    .modal-close:hover { color: var(--color-text); }
+    .modal-body { padding: 1.4rem; }
+    .modal-ft { display: flex; gap: 0.6rem; justify-content: flex-end; padding: 0.9rem 1.4rem; border-top: 1px solid #ffffff08; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+    .col-full  { grid-column: 1 / -1; }
+    .fgroup { display: flex; flex-direction: column; gap: 0.35rem; }
+    .flabel { font-size: 0.75rem; font-weight: 600; color: var(--color-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .finput { background: #0D0D0D; border: 1.5px solid #ffffff10; border-radius: 8px; padding: 0.55rem 0.85rem; color: var(--color-text); font-family: inherit; font-size: 0.88rem; outline: none; width: 100%; transition: border-color 0.18s; }
+    .finput:focus { border-color: var(--color-gold); }
+    select.finput option { background: #1a1a1a; }
+    
+    .img-prev { width: 100%; max-height: 200px; border-radius: 8px; object-fit: contain; background: #111; margin-top: 0.4rem; display: none; border: 1px solid #ffffff08; }
+    .img-prev.show { display: block; }
+    
+    .file-input-wrapper { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .file-input-wrapper input[type="file"] { flex: 1; min-width: 150px; }
+    .file-hint { font-size: 0.7rem; color: var(--color-muted); margin-top: 0.3rem; }
+
+    .confirm-modal { max-width: 360px; }
+    .confirm-body  { padding: 2rem 1.5rem; text-align: center; }
+    .confirm-icon  { font-size: 2.4rem; margin-bottom: 0.65rem; }
+    .confirm-body h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .confirm-body p  { color: var(--color-muted); font-size: 0.88rem; line-height: 1.6; }
+
+    .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(12px); background: var(--color-gold); color: #000; padding: 0.65rem 1.4rem; border-radius: 99px; font-weight: 700; font-size: 0.88rem; z-index: 999; opacity: 0; transition: opacity 0.25s, transform 0.25s; pointer-events: none; white-space: nowrap; box-shadow: 0 4px 20px rgba(0,0,0,.4); }
+    .toast.err  { background: #8B2020; color: #fff; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .period-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .period-tab { padding: 0.45rem 1rem; border-radius: 99px; border: 1.5px solid #ffffff12; background: none; color: var(--color-muted); font-family: inherit; font-size: 0.85rem; cursor: pointer; transition: all 0.18s; }
+    .period-tab:hover  { border-color: var(--color-gold); color: var(--color-gold); }
+    .period-tab.active { background: var(--color-gold); border-color: var(--color-gold); color: #000; font-weight: 700; }
+
+    .sales-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 1.2rem; margin-bottom: 2rem; }
+    .order-card { background: #161616; border: 1px solid #ffffff08; border-radius: 12px; overflow: hidden; }
+    .order-card-hd { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.1rem; border-bottom: 1px solid #ffffff07; }
+    .order-id    { font-size: 0.75rem; color: var(--color-muted); }
+    .order-date  { font-size: 0.75rem; color: var(--color-muted); }
+    .order-total { font-size: 1rem; font-weight: 800; color: var(--color-gold); }
+    .order-items { padding: 0.75rem 1.1rem; display: flex; flex-direction: column; gap: 0.4rem; }
+    .order-item-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.83rem; }
+    .order-item-name { color: var(--color-text); }
+    .order-item-meta { color: var(--color-muted); font-size: 0.75rem; }
+    .order-item-price { color: var(--color-gold); font-weight: 600; font-size: 0.83rem; }
+
+    .top-items-table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+    .top-items-table th { text-align: right; padding: 0.6rem 0.8rem; font-size: 0.75rem; color: var(--color-muted); border-bottom: 1px solid #ffffff08; }
+    .top-items-table td { padding: 0.65rem 0.8rem; font-size: 0.86rem; border-bottom: 1px solid #ffffff05; }
+    .top-items-table tr:last-child td { border-bottom: none; }
+    .rank-badge { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: rgba(201,168,76,.15); color: var(--color-gold); font-size: 0.72rem; font-weight: 800; }
+
+    .no-orders { text-align: center; padding: 4rem 2rem; color: var(--color-muted); }
+    .no-orders .icon { font-size: 3rem; margin-bottom: 1rem; }
+
+    @media (max-width: 768px) {
+      .stat-row { grid-template-columns: repeat(2,1fr); gap: 0.65rem; }
+      .sc-val { font-size: 1.4rem; }
+      .sales-grid { grid-template-columns: 1fr; }
+      .period-tabs { gap: 0.35rem; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 0.4rem; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+      .period-tabs::-webkit-scrollbar { display: none; }
+      .period-tab { flex-shrink: 0; font-size: 0.8rem; padding: 0.38rem 0.75rem; }
+    }
+
+    @media (max-width: 640px) {
+      .side-nav { display: none; }
+      .layout { flex-direction: column; }
+      .main { padding: 1rem 0.85rem 6rem; }
+
+      .bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        background: #111;
+        border-top: 1px solid #ffffff0a;
+        z-index: 200;
+        padding: 0.5rem 0 calc(0.5rem + env(safe-area-inset-bottom));
+        box-shadow: 0 -4px 20px rgba(0,0,0,.4);
+      }
+      .bottom-nav-btn {
+        flex: 1; display: flex; flex-direction: column; align-items: center;
+        gap: 0.15rem; padding: 0.35rem 0;
+        background: none; border: none; font-family: inherit;
+        font-size: 0.62rem; color: var(--color-muted);
+        cursor: pointer; transition: color 0.18s; text-align: center;
+      }
+      .bottom-nav-btn .b-icon { font-size: 1.15rem; display: block; }
+      .bottom-nav-btn.active  { color: var(--color-gold); }
+
+      .page-hd { margin-bottom: 1rem; }
+      .page-hd h2 { font-size: 1.2rem; }
+      .page-hd .btn { font-size: 0.8rem; padding: 0.45rem 0.85rem; }
+
+      table thead { display: none; }
+      table, tbody, tr, td { display: block; width: 100%; }
+      tbody tr {
+        background: #161616; border: 1px solid #ffffff08;
+        border-radius: 10px; margin-bottom: 0.65rem;
+        padding: 0.75rem; display: grid;
+        grid-template-columns: 50px 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 0.35rem 0.75rem;
+      }
+      tbody td { padding: 0; border: none; font-size: 0.84rem; }
+      tbody td:nth-child(1) { grid-row: 1 / 3; grid-column: 1; display: flex; align-items: center; }
+      tbody td:nth-child(2) { grid-row: 1; grid-column: 2; }
+      tbody td:nth-child(3) { grid-row: 2; grid-column: 2; }
+      tbody td:nth-child(4) { grid-row: 3; grid-column: 2; }
+      tbody td:nth-child(5) { display: none; }
+      tbody td:nth-child(6) { grid-column: 1 / -1; border-top: 1px solid #ffffff06; padding-top: 0.5rem; margin-top: 0.2rem; }
+      .thumb { width: 44px; height: 44px; }
+      .thumb-placeholder { width: 44px; height: 44px; }
+      .row-actions { gap: 0.4rem; }
+      .btn-sm { font-size: 0.75rem; padding: 0.28rem 0.6rem; }
+      .table-toolbar { gap: 0.5rem; }
+      .table-toolbar .sel { display: none; }
+      .search-wrap { max-width: 100%; }
+
+      .form-grid { grid-template-columns: 1fr; }
+      .modal-wrap { align-items: flex-end; padding: 0; }
+      .modal { border-radius: 16px 16px 0 0; max-height: 88vh; }
+
+      .top-items-table td:nth-child(3),
+      .top-items-table th:nth-child(3) { display: none; }
+    }
+
+    .bottom-nav { display: none; }
+
+    .topbar {
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: #111;
+      border-bottom: 1px solid #ffffff0a;
+      position: sticky;
+      top: 0;
+      z-index: 150;
+    }
+
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px;
+      height: 36px;
+      padding: 6px;
+      background: none;
+      border: 1.5px solid #ffffff18;
+      border-radius: 8px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: border-color 0.18s;
+    }
+    .hamburger:hover { border-color: var(--color-gold); }
+    .hamburger span {
+      display: block;
+      height: 2px;
+      background: var(--color-text);
+      border-radius: 2px;
+      transition: all 0.25s;
+      transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .topbar-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-gold);
+    }
+
+    .nav-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 198;
+    }
+    .nav-overlay.open { display: block; }
+
+    @media (max-width: 640px) {
+      .topbar { display: flex; }
+      .side-nav {
+        display: flex;
+        position: fixed;
+        top: 0;
+        right: -240px;
+        width: 240px;
+        height: 100vh;
+        z-index: 199;
+        transition: right 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        border-left: 1px solid #ffffff12;
+        box-shadow: -8px 0 32px rgba(0,0,0,.5);
+      }
+      .side-nav.open { right: 0; }
+      .main { padding: 1rem 0.85rem 6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="nav-overlay" id="navOverlay" onclick="closeSidebar()"></div>
+
+<div class="topbar">
+  <button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <span class="topbar-title">☕ پنل مدیریت آریانا</span>
+</div>
+
+<div class="layout">
+  <nav class="side-nav" id="side-nav">
+    <div class="brand">
+      <h1>☕ آریانا</h1>
+      <p>پنل مدیریت</p>
+    </div>
+    <button class="nav-btn active" data-page="menu">🍽️ مدیریت منو</button>
+    <button class="nav-btn" data-page="sales">📊 آمار فروش</button>
+    <div class="nav-sep"></div>
+    <button class="nav-btn" onclick="resetToDefault()">🔄 بازگشت به پیش‌فرض</button>
+    <div class="nav-footer">
+      <a href="index.html">← بازگشت به سایت</a>
+    </div>
+  </nav>
+
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="bottom-nav-btn active" data-page="menu"><span class="b-icon">🍽️</span>منو</button>
+    <button class="bottom-nav-btn" data-page="sales"><span class="b-icon">📊</span>فروش</button>
+    <button class="bottom-nav-btn" onclick="resetToDefault()"><span class="b-icon">🔄</span>ریست</button>
+    <a class="bottom-nav-btn" href="index.html" style="text-decoration:none"><span class="b-icon">🏠</span>سایت</a>
+  </nav>
+
+  <main class="main">
+
+    <div id="page-menu">
+      <div class="page-hd">
+        <div>
+          <h2>مدیریت منو</h2>
+          <span>افزودن، ویرایش و حذف آیتم‌ها</span>
+        </div>
+        <button class="btn btn-primary" onclick="openAdd()">+ افزودن آیتم</button>
+      </div>
+      <div class="stat-row" id="menuStats"></div>
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div class="search-wrap">
+            <span style="color:var(--color-muted)">🔍</span>
+            <input type="text" id="searchQ" placeholder="جستجو..." oninput="applyFilter()" />
+          </div>
+          <select class="sel" id="catQ" onchange="applyFilter()">
+            <option value="">همه دسته‌ها</option>
+            <option value="hot">☕ گرم</option>
+            <option value="cold">🧊 سرد</option>
+            <option value="food">🍔 فست‌فود</option>
+            <option value="dessert">🍰 دسر</option>
+            <option value="salad">🥗 سالاد</option>
+            <option value="shake">🥤 شیک</option>
+          </select>
+          <select class="sel" id="badgeQ" onchange="applyFilter()">
+            <option value="">همه بج‌ها</option>
+            <option value="popular">پرطرفدار</option>
+            <option value="new">جدید</option>
+          </select>
+        </div>
+        <div id="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>عکس</th><th>نام آیتم</th><th>دسته</th><th>قیمت (تومان)</th><th>بج</th><th>عملیات</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-sales" style="display:none">
+      <div class="page-hd">
+        <div>
+          <h2>آمار فروش</h2>
+          <span>گزارش سفارش‌های ثبت‌شده از سایت</span>
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="clearOrders()">🗑️ پاک کردن سوابق</button>
+      </div>
+
+      <div class="period-tabs">
+        <button class="period-tab active" data-period="daily">امروز</button>
+        <button class="period-tab" data-period="weekly">۷ روز اخیر</button>
+        <button class="period-tab" data-period="monthly">۳۰ روز اخیر</button>
+        <button class="period-tab" data-period="all">همه زمان‌ها</button>
+      </div>
+
+      <div class="stat-row" id="salesStats"></div>
+
+      <div class="table-card" style="margin-bottom:1.5rem">
+        <div style="padding:0.9rem 1.1rem;border-bottom:1px solid #ffffff07;font-weight:700;font-size:0.9rem">
+          🏆 پرفروش‌ترین آیتم‌ها
+        </div>
+        <div style="padding:0 0.3rem 0.5rem">
+          <table class="top-items-table">
+            <thead>
+              <tr><th>رتبه</th><th>آیتم</th><th>دسته</th><th>تعداد فروش</th><th>درآمد (تومان)</th></tr>
+            </thead>
+            <tbody id="topItemsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="font-weight:700;font-size:0.9rem;margin-bottom:1rem">📋 جزئیات سفارش‌ها</div>
+      <div id="ordersGrid" class="sales-grid"></div>
+    </div>
+
+  </main>
+</div>
+
+<div class="modal-wrap" id="formModal">
+  <div class="modal">
+    <div class="modal-hd">
+      <h3 id="modalTitle">افزودن آیتم جدید</h3>
+      <button class="modal-close" onclick="closeModal('formModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="f-id" />
+      <div class="form-grid">
+        <div class="fgroup col-full">
+          <label class="flabel">نام آیتم *</label>
+          <input class="finput" id="f-name" type="text" placeholder="مثال: اسپرسو دوبل" />
+        </div>
+        <div class="fgroup">
+          <label class="flabel">دسته‌بندی *</label>
+          <select class="finput" id="f-cat">
+            <option value="">انتخاب کنید...</option>
+            <option value="hot">☕ گرم</option>
+            <option value="cold">🧊 سرد</option>
+            <option value="food">🍔 فست‌فود</option>
+            <option value="dessert">🍰 دسر</option>
+            <option value="salad">🥗 سالاد</option>
+            <option value="shake">🥤 شیک</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">قیمت (تومان) *</label>
+          <input class="finput" id="f-price" type="number" min="0" step="1000" placeholder="مثال: 65000" />
+        </div>
+        <div class="fgroup col-full">
+          <label class="flabel">توضیحات</label>
+          <input class="finput" id="f-desc" type="text" placeholder="توضیح کوتاه..." />
+        </div>
+        <div class="fgroup">
+          <label class="flabel">بج</label>
+          <select class="finput" id="f-badge">
+            <option value="">بدون بج</option>
+            <option value="popular">⭐ پرطرفدار</option>
+            <option value="new">✨ جدید</option>
+          </select>
+        </div>
+        
+        <div class="fgroup col-full">
+          <label class="flabel">عکس آیتم</label>
+          <div class="file-input-wrapper">
+            <input type="file" id="f-image" accept="image/*" onchange="previewImage(this)" />
+          </div>
+          <div id="imagePreview" style="margin-top: 10px;">
+            <img id="currentImage" class="img-prev" alt="پیش‌نمایش عکس" />
+          </div>
+          <button type="button" class="btn btn-danger btn-sm" id="deleteImageBtn" onclick="deleteImage()" style="margin-top: 5px; display: none;">
+            🗑️ حذف عکس
+          </button>
+          <div class="file-hint">
+            ⚠️ حجم عکس نباید بیشتر از 500KB باشد | فرمت‌های مجاز: JPG, PNG, GIF, WebP
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal('formModal')">انصراف</button>
+      <button class="btn btn-primary" onclick="saveItem()">💾 ذخیره</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-wrap" id="confirmModal">
+  <div class="modal confirm-modal">
+    <div class="confirm-body">
+      <div class="confirm-icon">🗑️</div>
+      <h4>حذف آیتم</h4>
+      <p id="confirmMsg">آیا مطمئنید؟</p>
+    </div>
+    <div class="modal-ft" style="justify-content:center;padding-top:0">
+      <button class="btn btn-ghost" onclick="closeModal('confirmModal')">انصراف</button>
+      <button class="btn btn-danger" id="confirmBtn">حذف</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/data.js"></script>
+<script>
+
+const CAT = {
+  hot:     '☕ گرم',
+  cold:    '🧊 سرد',
+  food:    '🍔 فست‌فود',
+  dessert: '🍰 دسر',
+  salad:   '🥗 سالاد',
+  shake:   '🥤 شیک'
+};
+
+let _items    = [];
+let _filtered = [];
+let _period   = 'daily';
+let currentImageBase64 = null;
+let currentItemId = null;
+
+function showToast(msg, isErr) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className   = 'toast' + (isErr ? ' err' : '') + ' show';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+}
+
+function previewImage(input) {
+  const img = document.getElementById('currentImage');
+  const deleteBtn = document.getElementById('deleteImageBtn');
+  
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    
+    if (file.size > 500 * 1024) {
+      showToast('حجم فایل نباید بیشتر از 500KB باشد', true);
+      input.value = '';
+      return;
+    }
+    
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      showToast('فرمت فایل مجاز نیست. فقط JPG, PNG, GIF, WebP', true);
+      input.value = '';
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      img.src = e.target.result;
+      img.className = 'img-prev show';
+      currentImageBase64 = e.target.result;
+      deleteBtn.style.display = 'inline-block';
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function showCurrentImage(imageData) {
+  const img = document.getElementById('currentImage');
+  const deleteBtn = document.getElementById('deleteImageBtn');
+  
+  if (imageData && imageData.trim() !== '' && imageData.startsWith('data:image')) {
+    img.src = imageData;
+    img.className = 'img-prev show';
+    currentImageBase64 = imageData;
+    deleteBtn.style.display = 'inline-block';
+  } else {
+    img.src = '';
+    img.className = 'img-prev';
+    currentImageBase64 = null;
+    deleteBtn.style.display = 'none';
+  }
+}
+
+function deleteImage() {
+  if (!currentImageBase64) {
+    showToast('تصویری برای حذف وجود ندارد', true);
+    return;
+  }
+  
+  if (!confirm('آیا از حذف این تصویر مطمئن هستید؟')) return;
+  
+  const id = document.getElementById('f-id').value;
+  if (id) {
+    const item = DB.getById(id);
+    if (item) {
+      DB.update(id, { ...item, img: '' });
+      showToast('تصویر با موفقیت حذف شد');
+    }
+  }
+  
+  currentImageBase64 = null;
+  document.getElementById('currentImage').className = 'img-prev';
+  document.getElementById('currentImage').src = '';
+  document.getElementById('deleteImageBtn').style.display = 'none';
+  document.getElementById('f-image').value = '';
+}
+
+function switchPage(name) {
+  document.querySelectorAll('.main > div').forEach(d => d.style.display = 'none');
+  document.getElementById('page-' + name).style.display = 'block';
+  document.querySelectorAll('.nav-btn[data-page], .bottom-nav-btn[data-page]').forEach(b => {
+    b.classList.remove('active');
+  });
+  document.querySelectorAll('[data-page="' + name + '"]').forEach(b => {
+    b.classList.add('active');
+  });
+  if (name === 'sales') renderSales();
+  closeSidebar();
+}
+
+document.querySelectorAll('.nav-btn[data-page], .bottom-nav-btn[data-page]').forEach(btn => {
+  btn.addEventListener('click', () => switchPage(btn.dataset.page));
+});
+
+document.querySelectorAll('.period-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    _period = tab.dataset.period;
+    renderSales();
+  });
+});
+
+function load() {
+  _items    = DB.getAll();
+  _filtered = [..._items];
+  renderMenuStats();
+  renderTable();
+}
+
+function renderMenuStats() {
+  const activeCats  = Object.keys(CAT).filter(c => _items.some(i => i.cat === c)).length;
+  const popularCount = _items.filter(i => i.badge === 'popular').length;
+  const newCount     = _items.filter(i => i.badge === 'new').length;
+
+  document.getElementById('menuStats').innerHTML = `
+    <div class="stat-card">
+      <div class="sc-val">${_items.length}</div>
+      <div class="sc-label">کل آیتم‌ها</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-val">${activeCats}</div>
+      <div class="sc-label">دسته فعال</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-val">${popularCount}</div>
+      <div class="sc-label">پرطرفدار</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-val">${newCount}</div>
+      <div class="sc-label">جدید</div>
+    </div>
+  `;
+}
+
+function applyFilter() {
+  const q   = document.getElementById('searchQ').value.trim().toLowerCase();
+  const cat = document.getElementById('catQ').value;
+  const bdg = document.getElementById('badgeQ').value;
+
+  _filtered = _items.filter(i =>
+    (!q   || i.name.includes(q) || i.desc.includes(q)) &&
+    (!cat || i.cat   === cat) &&
+    (!bdg || i.badge === bdg)
+  );
+
+  renderTable();
+}
+
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+
+  if (_filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-td">🔍 آیتمی پیدا نشد</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = _filtered.map(item => {
+    const desc     = item.desc ? item.desc.slice(0, 40) + (item.desc.length > 40 ? '…' : '') : '—';
+    const badgePill = item.badge === 'popular'
+      ? '<span class="pill pill-popular">پرطرفدار</span>'
+      : item.badge === 'new'
+        ? '<span class="pill pill-new">جدید</span>'
+        : '<span class="pill pill-none">—</span>';
+
+    const imgHtml = item.img && item.img.trim() !== ''
+      ? `<img class="thumb" src="${item.img}" alt="${item.name}" onerror="this.style.display='none'" />`
+      : `<div class="thumb-placeholder">📷</div>`;
+
+    return `
+      <tr>
+        <td>${imgHtml}</td>
+        <td>
+          <strong>${item.name}</strong>
+          <div style="font-size:0.75rem;color:var(--color-muted);margin-top:2px">${desc}</div>
+        </td>
+        <td>
+          <span class="pill pill-cat">${CAT[item.cat] || item.cat}</span>
+        </td>
+        <td>
+          <strong style="color:var(--color-gold)">${item.price.toLocaleString('fa-IR')}</strong>
+        </td>
+        <td>${badgePill}</td>
+        <td>
+          <div class="row-actions">
+            <button class="btn btn-ghost btn-sm" onclick="openEdit(${item.id})">✏️ ویرایش</button>
+            <button class="btn btn-danger btn-sm" onclick="askDelete(${item.id}, '${item.name.replace(/'/g, "\\'")}')">🗑️ حذف</button>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+function filterOrders(orders) {
+  const now = new Date();
+  return orders.filter(o => {
+    const d = new Date(o.timestamp);
+    if (_period === 'daily')   return d.toDateString() === now.toDateString();
+    if (_period === 'weekly')  return (now - d) <= 7  * 86400000;
+    if (_period === 'monthly') return (now - d) <= 30 * 86400000;
+    return true;
+  });
+}
+
+function renderSales() {
+  const allOrders     = Orders.getAll();
+  const filtered      = filterOrders(allOrders);
+  const totalRevenue  = filtered.reduce((s, o) => s + o.grandTotal, 0);
+  const totalSold     = filtered.reduce((s, o) => {
+    return s + o.items.reduce((ss, i) => ss + i.qty, 0);
+  }, 0);
+  const avgOrder      = filtered.length
+    ? Math.round(totalRevenue / filtered.length)
+    : 0;
+
+  document.getElementById('salesStats').innerHTML = `
+    <div class="stat-card">
+      <div class="sc-val">${filtered.length}</div>
+      <div class="sc-label">تعداد سفارش</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-val">${totalSold}</div>
+      <div class="sc-label">آیتم فروخته‌شده</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-val">${totalRevenue.toLocaleString('fa-IR')}</div>
+      <div class="sc-label">درآمد (تومان)</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-val">${avgOrder.toLocaleString('fa-IR')}</div>
+      <div class="sc-label">میانگین هر سفارش</div>
+    </div>
+  `;
+
+  const itemMap = {};
+  filtered.forEach(o => {
+    o.items.forEach(i => {
+      if (!itemMap[i.id]) {
+        itemMap[i.id] = { name: i.name, cat: i.cat, qty: 0, revenue: 0 };
+      }
+      itemMap[i.id].qty     += i.qty;
+      itemMap[i.id].revenue += i.total;
+    });
+  });
+
+  const topItems = Object.values(itemMap)
+    .sort((a, b) => b.qty - a.qty)
+    .slice(0, 10);
+
+  const topBody = document.getElementById('topItemsBody');
+  if (topItems.length === 0) {
+    topBody.innerHTML = `
+      <tr>
+        <td colspan="5" class="empty-td" style="padding:1.5rem">داده‌ای وجود ندارد</td>
+      </tr>`;
+  } else {
+    topBody.innerHTML = topItems.map((it, idx) => `
+      <tr>
+        <td><span class="rank-badge">${idx + 1}</span></td>
+        <td><strong>${it.name}</strong></td>
+        <td><span class="pill pill-cat">${CAT[it.cat] || it.cat}</span></td>
+        <td>${it.qty} عدد</td>
+        <td style="color:var(--color-gold);font-weight:700">${it.revenue.toLocaleString('fa-IR')}</td>
+      </tr>`
+    ).join('');
+  }
+
+  const grid = document.getElementById('ordersGrid');
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div class="no-orders" style="grid-column:1/-1">
+        <div class="icon">📋</div>
+        <p>در این بازه زمانی سفارشی ثبت نشده</p>
+      </div>`;
+    return;
+  }
+
+  const sorted = [...filtered].sort((a, b) => b.orderId - a.orderId);
+  grid.innerHTML = sorted.map(order => {
+    const d    = new Date(order.timestamp);
+    const date = d.toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' });
+    const time = d.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+
+    const itemRows = order.items.map(i => `
+      <div class="order-item-row">
+        <div>
+          <span class="order-item-name">${i.name}</span>
+          <span class="order-item-meta"> × ${i.qty}</span>
+        </div>
+        <span class="order-item-price">${i.total.toLocaleString('fa-IR')} ت</span>
+      </div>`
+    ).join('');
+
+    return `
+      <div class="order-card">
+        <div class="order-card-hd">
+          <div>
+            <div class="order-id">سفارش #${String(order.orderId).slice(-6)}</div>
+            <div class="order-date">${date} — ${time}</div>
+          </div>
+          <div class="order-total">${order.grandTotal.toLocaleString('fa-IR')} ت</div>
+        </div>
+        <div class="order-items">${itemRows}</div>
+      </div>`;
+  }).join('');
+}
+
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+document.querySelectorAll('.modal-wrap').forEach(el => {
+  el.addEventListener('click', e => {
+    if (e.target === el) el.classList.remove('open');
+  });
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-wrap.open').forEach(m => m.classList.remove('open'));
+  }
+});
+
+function clearForm() {
+  ['f-id', 'f-name', 'f-desc'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('f-cat').value = '';
+  document.getElementById('f-price').value = '';
+  document.getElementById('f-badge').value = '';
+  document.getElementById('f-image').value = '';
+  
+  const img = document.getElementById('currentImage');
+  img.src = '';
+  img.className = 'img-prev';
+  currentImageBase64 = null;
+  document.getElementById('deleteImageBtn').style.display = 'none';
+}
+
+function openAdd() {
+  currentItemId = null;
+  clearForm();
+  document.getElementById('modalTitle').textContent = '➕ افزودن آیتم جدید';
+  openModal('formModal');
+}
+
+function openEdit(id) {
+  const item = DB.getById(id);
+  if (!item) return;
+  
+  currentItemId = id;
+  document.getElementById('modalTitle').textContent = '✏️ ویرایش آیتم';
+  document.getElementById('f-id').value = item.id;
+  document.getElementById('f-name').value = item.name;
+  document.getElementById('f-cat').value = item.cat;
+  document.getElementById('f-price').value = item.price;
+  document.getElementById('f-desc').value = item.desc;
+  document.getElementById('f-badge').value = item.badge;
+  document.getElementById('f-image').value = '';
+  
+  showCurrentImage(item.img);
+  
+  openModal('formModal');
+}
+
+async function saveItem() {
+  const id = document.getElementById('f-id').value;
+  const name = document.getElementById('f-name').value.trim();
+  const cat = document.getElementById('f-cat').value;
+  const price = document.getElementById('f-price').value;
+
+  if (!name || !cat || !price) {
+    showToast('لطفاً نام، دسته‌بندی و قیمت را وارد کنید', true);
+    return;
+  }
+
+  const data = {
+    name: name,
+    cat: cat,
+    price: Number(price),
+    desc: document.getElementById('f-desc').value.trim(),
+    badge: document.getElementById('f-badge').value
+  };
+
+  if (currentImageBase64) {
+    data.img = currentImageBase64;
+  }
+
+  let savedItem;
+  if (id) {
+    const existingItem = DB.getById(id);
+    if (!data.img && existingItem && existingItem.img) {
+      data.img = existingItem.img;
+    }
+    savedItem = DB.update(id, data);
+    showToast(`«${name}» ویرایش شد ✓`);
+  } else {
+    savedItem = DB.add(data);
+    showToast(`«${name}» اضافه شد ✓`);
+  }
+
+  closeModal('formModal');
+  load();
+}
+
+function askDelete(id, name) {
+  document.getElementById('confirmMsg').textContent = `«${name}» برای همیشه از منو حذف می‌شود.`;
+  document.getElementById('confirmBtn').onclick = () => {
+    DB.remove(id);
+    showToast(`«${name}» حذف شد`);
+    closeModal('confirmModal');
+    load();
+  };
+  openModal('confirmModal');
+}
+
+function resetToDefault() {
+  if (!confirm('همه تغییرات پاک می‌شود و منو به حالت اولیه برمی‌گردد. ادامه می‌دهید؟')) return;
+  DB.reset();
+  showToast('منو به حالت پیش‌فرض بازگشت ✓');
+  load();
+}
+
+function clearOrders() {
+  if (!confirm('تمام سوابق فروش پاک می‌شوند. ادامه می‌دهید؟')) return;
+  Orders.clearAll();
+  showToast('سوابق فروش پاک شد');
+  renderSales();
+}
+
+function toggleSidebar() {
+  const nav = document.getElementById('side-nav');
+  const btn = document.getElementById('hamburger');
+  const ovl = document.getElementById('navOverlay');
+  nav.classList.toggle('open');
+  btn.classList.toggle('open');
+  ovl.classList.toggle('open');
+}
+
+function closeSidebar() {
+  document.getElementById('side-nav').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('navOverlay').classList.remove('open');
+}
+
+load();
+
+</script>
+</body>
+</html>

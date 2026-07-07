@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>کافه رستوران آریانا</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;900&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+  <section class="hero" id="home">
+    <div class="hero-bg"></div>
+    <div class="hero-noise"></div>
+    <div class="hero-content">
+      <span class="badge">از ۱۳۸۵ در خدمت شما</span>
+      <h1>کافه رستوران<br /><span class="highlight">آریانا</span></h1>
+      <p>طعمی که فراموش نمی‌شود — از اولین قهوه تا آخرین دسر، هر لحظه را خاص می‌کنیم</p>
+      <div class="hero-cta">
+        <a href="#menu" class="btn btn-gold">مشاهده منو</a>
+      </div>
+    </div>
+    <div class="scroll-hint"><span></span></div>
+  </section>
+
+  <nav class="nav" id="navbar">
+    <div class="nav-inner">
+      <div class="logo">
+        آریانا
+        <small>ARIANA CAFÉ</small>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#home">صفحه اصلی</a></li>
+        <li><a href="#menu" class="active">منو</a></li>
+        <li><a href="#footer">درباره ما</a></li>
+      </ul>
+      <button class="cart-btn" id="cartBtn" onclick="Cart.toggle()">
+        <span class="cart-count" id="cartCount">0</span>
+        🛒 سبد خرید
+      </button>
+    </div>
+  </nav>
+
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat">
+        <div class="stat-val">+۱۲۰</div>
+        <div class="stat-label">آیتم منو</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">+۸۰۰۰</div>
+        <div class="stat-label">مشتری راضی</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">۱۸</div>
+        <div class="stat-label">سال تجربه</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">۴.۹ ★</div>
+        <div class="stat-label">امتیاز</div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section" id="menu">
+    <div class="section-header">
+      <span class="eyebrow">🍽️ منوی ما</span>
+      <h2>انتخاب کنید</h2>
+      <p>هر آیتم با بهترین مواد اولیه و با عشق تهیه می‌شود</p>
+    </div>
+    <div class="cat-tabs" id="catTabs">
+      <button class="cat-tab active" data-cat="all">همه</button>
+      <button class="cat-tab" data-cat="hot">☕ گرم</button>
+      <button class="cat-tab" data-cat="cold">🧊 سرد</button>
+      <button class="cat-tab" data-cat="food">🍔 فست‌فود</button>
+      <button class="cat-tab" data-cat="dessert">🍰 دسر</button>
+      <button class="cat-tab" data-cat="salad">🥗 سالاد</button>
+      <button class="cat-tab" data-cat="shake">🥤 شیک</button>
+    </div>
+    <div class="grid" id="menuGrid"></div>
+  </section>
+
+  <hr class="divider" />
+
+  <footer class="footer" id="footer">
+    <p><strong>کافه رستوران آریانا</strong></p>
+    <p>تهران، خیابان ولیعصر، پلاک ۴۲۰</p>
+    <p>📞 ۰۲۱-۸۸۷۶۵۴۳۲ &nbsp;|&nbsp; 🕐 هر روز ۸ صبح تا ۱۲ شب</p>
+  </footer>
+
+  <div class="overlay" id="overlay" onclick="Cart.toggle()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h3>🛒 سبد خرید</h3>
+      <button class="close-btn" onclick="Cart.toggle()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="empty-cart">
+        <div class="empty-icon">🛒</div>
+        <p>سبد خرید شما خالی است</p>
+      </div>
+    </div>
+    <div class="sidebar-footer" id="sidebarFooter" style="display:none">
+      <div class="total-row">
+        <span class="total-label">مجموع</span>
+        <span class="total-val" id="totalPrice">۰ تومان</span>
+      </div>
+      <button class="checkout-btn" onclick="Cart.checkout()">ثبت سفارش</button>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+/* ============================================================
+   variables.css — Design tokens (colors, typography, spacing)
+   ============================================================ */
+
+:root {
+  /* ── Colors ──────────────────────────────────── */
+  --color-bg:       #0D0D0D;
+  --color-surface:  #161616;
+  --color-card:     #1E1E1E;
+
+  --color-gold:     #C9A84C;
+  --color-gold-lt:  #E8C97A;
+
+  --color-text:     #F0EDE8;
+  --color-muted:    #9A9590;
+
+  --color-accent:   #8B2020;   /* badge "popular"  */
+  --color-green:    #2E6B4F;   /* badge "new"      */
+
+  --color-border:   rgba(255, 255, 255, 0.05);
+  --color-overlay:  rgba(0, 0, 0, 0.6);
+
+  /* ── Typography ──────────────────────────────── */
+  --font-base: 'Vazirmatn', sans-serif;
+
+  --text-xs:   0.70rem;
+  --text-sm:   0.85rem;
+  --text-md:   1.00rem;
+  --text-lg:   1.10rem;
+  --text-xl:   1.30rem;
+  --text-2xl:  1.80rem;
+  --text-hero: clamp(2.8rem, 8vw, 6rem);
+
+  /* ── Spacing ─────────────────────────────────── */
+  --space-xs:  0.40rem;
+  --space-sm:  0.75rem;
+  --space-md:  1.20rem;
+  --space-lg:  2.00rem;
+  --space-xl:  3.00rem;
+  --space-2xl: 5.00rem;
+
+  /* ── Borders & Radius ────────────────────────── */
+  --radius-sm:  8px;
+  --radius-md:  16px;
+  --radius-full: 99px;
+
+  /* ── Shadows ─────────────────────────────────── */
+  --shadow-card:  0 16px 40px rgba(0, 0, 0, 0.50);
+  --shadow-btn:   0 8px 24px  rgba(0, 0, 0, 0.40);
+
+  /* ── Transitions ─────────────────────────────── */
+  --transition-fast:   0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow:   0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── Z-index ─────────────────────────────────── */
+  --z-nav:     100;
+  --z-overlay: 200;
+  --z-sidebar: 201;
+  --z-toast:   300;
+}
