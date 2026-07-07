@@ -226,6 +226,15 @@ const DEFAULT_MENU = [
     price: 98000,
     badge: 'new',
     img: 'https://uploadkon.ir/uploads/747307_26میلک-شیک-اوریو.jpg'
+  },
+   {
+    id: 26,
+    cat: 'dessert',
+    name: 'چیتوز موتوری',
+    desc: 'پفک',
+    price: 45000,
+    badge: 'new',
+    img: 'https://uploadkon.ir/uploads/b58707_26چیتوز-موتوری.jpg'
   }
 ];
 
