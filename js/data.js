@@ -9,7 +9,7 @@ const DEFAULT_MENU = [
     desc: 'دو شات اسپرسو غلیظ با کرم طلایی',
     price: 45000,
     badge: 'popular',
-    img: 'img/اسپرسو دوبل.jpg'
+    img: 'https://uploadkon.ir/uploads/3ef307_26اسپرسو-دوبل.jpg'
   },
   {
     id: 2,
@@ -18,7 +18,7 @@ const DEFAULT_MENU = [
     desc: 'اسپرسو با شیر بخار داده شده و فوم مخملی',
     price: 65000,
     badge: '',
-    img: 'img/کاپوچینو کلاسیک.jpg'
+    img: 'https://uploadkon.ir/uploads/beb607_26کاپوچینو-کلاسیک.jpg'
   },
   {
     id: 3,
@@ -27,7 +27,7 @@ const DEFAULT_MENU = [
     desc: 'اسپرسو با شیر خامه‌ای و سیروپ وانیل',
     price: 72000,
     badge: 'new',
-    img: 'img/لاته وانیل.jpg'
+    img: 'https://uploadkon.ir/uploads/984c07_26لاته-وانیل.jpg'
   },
   {
     id: 4,
@@ -36,7 +36,7 @@ const DEFAULT_MENU = [
     desc: 'شکلات بلژیکی، شیر گرم و خامه فرم‌گرفته',
     price: 68000,
     badge: '',
-    img: 'img/هات چاکلت.jpg'
+    img: 'https://uploadkon.ir/uploads/beb607_26هات-چاکلت.jpg'
   },
   {
     id: 5,
@@ -45,7 +45,7 @@ const DEFAULT_MENU = [
     desc: 'چای هندی با ادویه‌های گرم‌بخش و شیر',
     price: 48000,
     badge: '',
-    img: 'img/چای ماسالا.jpg'
+    img: 'https://uploadkon.ir/uploads/984c07_26چای-ماسالا.jpg'
   },
   {
     id: 6,
@@ -54,7 +54,7 @@ const DEFAULT_MENU = [
     desc: 'اسپرسو روی یخ با شیر سرد و کارامل',
     price: 75000,
     badge: 'popular',
-    img: 'img/آیس لاته.jpeg'
+    img: 'https://uploadkon.ir/uploads/beb607_26آیس-لاته.jpeg'
   },
   {
     id: 7,
@@ -63,7 +63,7 @@ const DEFAULT_MENU = [
     desc: 'قهوه سرد با شکلات، بستنی و خامه',
     price: 85000,
     badge: '',
-    img: 'img/فراپوچینو موکا.jpg'
+    img: 'https://uploadkon.ir/uploads/3fca07_26فراپاچینو-موکا.jpg'
   },
   {
     id: 8,
@@ -72,7 +72,7 @@ const DEFAULT_MENU = [
     desc: 'لیموناد خانگی با برگ‌های نعنا تازه و یخ',
     price: 58000,
     badge: 'new',
-    img: 'img/لیموناد نعنا.jpg'
+    img: 'https://uploadkon.ir/uploads/3fca07_26لیموناد-نعنا.jpg'
   },
   {
     id: 9,
@@ -81,7 +81,7 @@ const DEFAULT_MENU = [
     desc: 'چای سرد با طعم هلو و یخ خرد شده',
     price: 55000,
     badge: '',
-    img: 'img/آیس تی هلو.jpg'
+    img: 'https://uploadkon.ir/uploads/3fca07_26آیس-تی-هلو.jpg'
   },
   {
     id: 10,
@@ -90,7 +90,7 @@ const DEFAULT_MENU = [
     desc: 'موهیتو بدون الکل با انگور بلوبری و نعنا',
     price: 62000,
     badge: '',
-    img: 'img/موهیتو بلوبری.jpg'
+    img: 'https://uploadkon.ir/uploads/3fca07_26موهیتو-بلوبری.jpg'
   },
   {
     id: 11,
@@ -99,7 +99,7 @@ const DEFAULT_MENU = [
     desc: 'گوشت ۱۸۰گ، پنیر چدار، سس مخصوص، کاهو و گوجه',
     price: 168000,
     badge: 'popular',
-    img: 'img/برگر کلاسیک.jpg'
+    img: 'https://uploadkon.ir/uploads/3fca07_26برگر-کلاسیک.jpg'
   },
   {
     id: 12,
@@ -108,7 +108,7 @@ const DEFAULT_MENU = [
     desc: 'مرغ سوخاری ترد با سس هانی موستارد و کلسلا',
     price: 145000,
     badge: '',
-    img: 'img/ساندویچ مرغ کریسپی.png'
+    img: 'https://uploadkon.ir/uploads/353407_26ساندویچ-مرغ-کریسپی.png'
   },
   {
     id: 13,
@@ -117,7 +117,7 @@ const DEFAULT_MENU = [
     desc: 'سس گوجه خانگی، موزارلا تازه و ریحان',
     price: 195000,
     badge: 'new',
-    img: 'img/پیتزا مارگاریتا.jpg'
+    img: 'https://uploadkon.ir/uploads/b11207_26پیتزا-مارگاریتا.jpg'
   },
   {
     id: 14,
@@ -126,7 +126,7 @@ const DEFAULT_MENU = [
     desc: 'سیب‌زمینی ترد با نمک دریا و سس چیلی',
     price: 65000,
     badge: '',
-    img: 'img/سیب‌زمینی سوخاری.webp'
+    img: ''
   },
   {
     id: 15,
@@ -135,7 +135,7 @@ const DEFAULT_MENU = [
     desc: 'سوسیس گوشت گاو، خردل، کچاپ و پیاز کاراملی',
     price: 128000,
     badge: '',
-    img: 'img/هات‌داگ ویژه.jpg'
+    img: 'https://uploadkon.ir/uploads/359a07_26هات‌داگ-ویژه.jpg'
   },
   {
     id: 16,
@@ -144,7 +144,7 @@ const DEFAULT_MENU = [
     desc: 'بیسکوییت مکرون، کرم پنیر و سس توت‌فرنگی',
     price: 115000,
     badge: 'popular',
-    img: 'img/چیزکیک توت‌فرنگی.jpeg'
+    img: 'https://uploadkon.ir/uploads/b11207_26چیزکیک-توت‌فرنگی.jpeg'
   },
   {
     id: 17,
@@ -153,7 +153,7 @@ const DEFAULT_MENU = [
     desc: 'اسپرسو، لیدی فینگر، ماسکارپونه و پودر کاکائو',
     price: 125000,
     badge: '',
-    img: 'img/تیرامیسو.jpg'
+    img: 'https://uploadkon.ir/uploads/beb607_26تیرامیسو.jpg'
   },
   {
     id: 18,
@@ -162,7 +162,7 @@ const DEFAULT_MENU = [
     desc: 'مافین خانگی با تکه‌های شکلات ۷۰٪',
     price: 72000,
     badge: 'new',
-    img: 'img/مافین شکلات تلخ.jpg'
+    img: 'https://uploadkon.ir/uploads/b11207_26مافین-شکلات-تلخ.jpg'
   },
   {
     id: 19,
@@ -171,7 +171,7 @@ const DEFAULT_MENU = [
     desc: 'دسر ایتالیایی با سس شکلات تلخ',
     price: 98000,
     badge: '',
-    img: 'img/پانا کوتا وانیل.jpeg'
+    img: 'https://uploadkon.ir/uploads/b11207_26پانا-کوتا-وانیل.jpeg'
   },
   {
     id: 20,
@@ -180,7 +180,7 @@ const DEFAULT_MENU = [
     desc: 'کاهو رومن، مرغ گریل، ترتیاق، پنیر پارمزان',
     price: 138000,
     badge: 'popular',
-    img: 'img/سالاد سزار مرغ.jpg'
+    img: 'https://uploadkon.ir/uploads/3fca07_26سالاد-سزار-مرغ.jpg'
   },
   {
     id: 21,
@@ -189,7 +189,7 @@ const DEFAULT_MENU = [
     desc: 'اسفناج بیبی، پنیر فتا، گردو و زیتون',
     price: 118000,
     badge: '',
-    img: 'img/سالاد فتا اسفناج.jpg'
+    img: 'https://uploadkon.ir/uploads/3fca07_26سالاد-فتا-اسفناج.jpg'
   },
   {
     id: 22,
@@ -198,7 +198,7 @@ const DEFAULT_MENU = [
     desc: 'آووکادو، کینوا، گوجه گیلاسی و آبلیمو',
     price: 142000,
     badge: 'new',
-    img: 'img/سالاد آووکادو.jpg'
+    img: 'https://uploadkon.ir/uploads/afc007_26سالاد-آووکادو.jpg'
   },
   {
     id: 23,
@@ -207,7 +207,7 @@ const DEFAULT_MENU = [
     desc: 'موز رسیده، عسل طبیعی، شیر و بستنی وانیل',
     price: 88000,
     badge: 'popular',
-    img: 'img/شیک موز و عسل.jpg'
+    img: 'https://uploadkon.ir/uploads/b11207_26شیک-موز-و-عسل.jpg'
   },
   {
     id: 24,
@@ -216,7 +216,7 @@ const DEFAULT_MENU = [
     desc: 'توت‌فرنگی تازه، بستنی خامه‌ای و شیر',
     price: 92000,
     badge: '',
-    img: 'img/شیک توت‌فرنگی.jpg'
+    img: 'https://uploadkon.ir/uploads/747307_26شیک-توت‌فرنگی.jpg'
   },
   {
     id: 25,
@@ -225,7 +225,7 @@ const DEFAULT_MENU = [
     desc: 'شکلات، بیسکوییت اوره‌و، بستنی و شیر',
     price: 98000,
     badge: 'new',
-    img: 'img/شیک شکلات اوره‌و.jpg'
+    img: 'https://uploadkon.ir/uploads/747307_26میلک-شیک-اوریو.jpg'
   }
 ];
 
