@@ -217,15 +217,6 @@ const DEFAULT_MENU = [
     price: 92000,
     badge: '',
     img: 'https://uploadkon.ir/uploads/747307_26شیک-توت‌فرنگی.jpg'
-  },
-  {
-    id: 25,
-    cat: 'shake',
-    name: 'شیک شکلات اوره‌و',
-    desc: 'شکلات، بیسکوییت اوره‌و، بستنی و شیر',
-    price: 98000,
-    badge: 'new',
-    img: 'https://uploadkon.ir/uploads/747307_26میلک-شیک-اوریو.jpg'
   }
 ];
 
