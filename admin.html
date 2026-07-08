@@ -61,7 +61,6 @@
     tbody tr:last-child { border-bottom: none; }
     tbody td { padding: 0.65rem 1rem; font-size: 0.86rem; vertical-align: middle; }
     .thumb { width: 46px; height: 46px; border-radius: 8px; object-fit: cover; background: #222; display: block; }
-    .thumb-placeholder { width: 46px; height: 46px; border-radius: 8px; background: #2a2a2a; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--color-muted); }
     .pill { display: inline-block; padding: 0.18rem 0.55rem; border-radius: 99px; font-size: 0.7rem; font-weight: 600; }
     .pill-cat     { background: rgba(201,168,76,.12); color: var(--color-gold); }
     .pill-popular { background: rgba(139,32,32,.25); color: #f87171; }
@@ -88,13 +87,8 @@
     .finput { background: #0D0D0D; border: 1.5px solid #ffffff10; border-radius: 8px; padding: 0.55rem 0.85rem; color: var(--color-text); font-family: inherit; font-size: 0.88rem; outline: none; width: 100%; transition: border-color 0.18s; }
     .finput:focus { border-color: var(--color-gold); }
     select.finput option { background: #1a1a1a; }
-    
-    .img-prev { width: 100%; max-height: 200px; border-radius: 8px; object-fit: contain; background: #111; margin-top: 0.4rem; display: none; border: 1px solid #ffffff08; }
+    .img-prev { width: 100%; height: 130px; border-radius: 8px; object-fit: cover; background: #111; margin-top: 0.4rem; display: none; border: 1px solid #ffffff08; }
     .img-prev.show { display: block; }
-    
-    .file-input-wrapper { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-    .file-input-wrapper input[type="file"] { flex: 1; min-width: 150px; }
-    .file-hint { font-size: 0.7rem; color: var(--color-muted); margin-top: 0.3rem; }
 
     .confirm-modal { max-width: 360px; }
     .confirm-body  { padding: 2rem 1.5rem; text-align: center; }
@@ -188,7 +182,6 @@
       tbody td:nth-child(5) { display: none; }
       tbody td:nth-child(6) { grid-column: 1 / -1; border-top: 1px solid #ffffff06; padding-top: 0.5rem; margin-top: 0.2rem; }
       .thumb { width: 44px; height: 44px; }
-      .thumb-placeholder { width: 44px; height: 44px; }
       .row-actions { gap: 0.4rem; }
       .btn-sm { font-size: 0.75rem; padding: 0.28rem 0.6rem; }
       .table-toolbar { gap: 0.5rem; }
@@ -439,21 +432,12 @@
             <option value="new">✨ جدید</option>
           </select>
         </div>
-        
+        <div class="fgroup">
+          <label class="flabel">لینک عکس</label>
+          <input class="finput" id="f-img" type="url" placeholder="https://example.com/image.jpg" oninput="previewImg()" />
+        </div>
         <div class="fgroup col-full">
-          <label class="flabel">عکس آیتم</label>
-          <div class="file-input-wrapper">
-            <input type="file" id="f-image" accept="image/*" onchange="previewImage(this)" />
-          </div>
-          <div id="imagePreview" style="margin-top: 10px;">
-            <img id="currentImage" class="img-prev" alt="پیش‌نمایش عکس" />
-          </div>
-          <button type="button" class="btn btn-danger btn-sm" id="deleteImageBtn" onclick="deleteImage()" style="margin-top: 5px; display: none;">
-            🗑️ حذف عکس
-          </button>
-          <div class="file-hint">
-            ⚠️ حجم عکس نباید بیشتر از 500KB باشد | فرمت‌های مجاز: JPG, PNG, GIF, WebP
-          </div>
+          <img id="imgPrev" class="img-prev" alt="پیش‌نمایش" onerror="this.style.display='none'" />
         </div>
       </div>
     </div>
@@ -495,8 +479,6 @@ const CAT = {
 let _items    = [];
 let _filtered = [];
 let _period   = 'daily';
-let currentImageBase64 = null;
-let currentItemId = null;
 
 function showToast(msg, isErr) {
   const el = document.getElementById('toast');
@@ -504,87 +486,6 @@ function showToast(msg, isErr) {
   el.className   = 'toast' + (isErr ? ' err' : '') + ' show';
   clearTimeout(el._t);
   el._t = setTimeout(() => el.classList.remove('show'), 2600);
-}
-
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-}
-
-function previewImage(input) {
-  const img = document.getElementById('currentImage');
-  const deleteBtn = document.getElementById('deleteImageBtn');
-  
-  if (input.files && input.files[0]) {
-    const file = input.files[0];
-    
-    if (file.size > 500 * 1024) {
-      showToast('حجم فایل نباید بیشتر از 500KB باشد', true);
-      input.value = '';
-      return;
-    }
-    
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    if (!allowedTypes.includes(file.type)) {
-      showToast('فرمت فایل مجاز نیست. فقط JPG, PNG, GIF, WebP', true);
-      input.value = '';
-      return;
-    }
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      img.src = e.target.result;
-      img.className = 'img-prev show';
-      currentImageBase64 = e.target.result;
-      deleteBtn.style.display = 'inline-block';
-    };
-    reader.readAsDataURL(file);
-  }
-}
-
-function showCurrentImage(imageData) {
-  const img = document.getElementById('currentImage');
-  const deleteBtn = document.getElementById('deleteImageBtn');
-  
-  if (imageData && imageData.trim() !== '' && imageData.startsWith('data:image')) {
-    img.src = imageData;
-    img.className = 'img-prev show';
-    currentImageBase64 = imageData;
-    deleteBtn.style.display = 'inline-block';
-  } else {
-    img.src = '';
-    img.className = 'img-prev';
-    currentImageBase64 = null;
-    deleteBtn.style.display = 'none';
-  }
-}
-
-function deleteImage() {
-  if (!currentImageBase64) {
-    showToast('تصویری برای حذف وجود ندارد', true);
-    return;
-  }
-  
-  if (!confirm('آیا از حذف این تصویر مطمئن هستید؟')) return;
-  
-  const id = document.getElementById('f-id').value;
-  if (id) {
-    const item = DB.getById(id);
-    if (item) {
-      DB.update(id, { ...item, img: '' });
-      showToast('تصویر با موفقیت حذف شد');
-    }
-  }
-  
-  currentImageBase64 = null;
-  document.getElementById('currentImage').className = 'img-prev';
-  document.getElementById('currentImage').src = '';
-  document.getElementById('deleteImageBtn').style.display = 'none';
-  document.getElementById('f-image').value = '';
 }
 
 function switchPage(name) {
@@ -675,13 +576,16 @@ function renderTable() {
         ? '<span class="pill pill-new">جدید</span>'
         : '<span class="pill pill-none">—</span>';
 
-    const imgHtml = item.img && item.img.trim() !== ''
-      ? `<img class="thumb" src="${item.img}" alt="${item.name}" onerror="this.style.display='none'" />`
-      : `<div class="thumb-placeholder">📷</div>`;
-
     return `
       <tr>
-        <td>${imgHtml}</td>
+        <td>
+          <img
+            class="thumb"
+            src="${item.img || ''}"
+            alt="${item.name}"
+            onerror="this.style.background='#2a2a2a';this.removeAttribute('src')"
+          />
+        </td>
         <td>
           <strong>${item.name}</strong>
           <div style="font-size:0.75rem;color:var(--color-muted);margin-top:2px">${desc}</div>
@@ -703,18 +607,6 @@ function renderTable() {
   }).join('');
 }
 
-function getOrders() {
-  if (typeof Orders !== 'undefined' && Orders.getAll) {
-    return Orders.getAll();
-  }
-  try {
-    const raw = localStorage.getItem('ariana_orders_v1');
-    return raw ? JSON.parse(raw) : [];
-  } catch (e) {
-    return [];
-  }
-}
-
 function filterOrders(orders) {
   const now = new Date();
   return orders.filter(o => {
@@ -727,7 +619,7 @@ function filterOrders(orders) {
 }
 
 function renderSales() {
-  const allOrders     = getOrders();
+  const allOrders     = Orders.getAll();
   const filtered      = filterOrders(allOrders);
   const totalRevenue  = filtered.reduce((s, o) => s + o.grandTotal, 0);
   const totalSold     = filtered.reduce((s, o) => {
@@ -849,24 +741,26 @@ document.addEventListener('keydown', e => {
   }
 });
 
+function previewImg() {
+  const url = document.getElementById('f-img').value;
+  const img = document.getElementById('imgPrev');
+  img.src       = url;
+  img.className = 'img-prev' + (url ? ' show' : '');
+}
+
 function clearForm() {
-  ['f-id', 'f-name', 'f-desc'].forEach(id => {
+  ['f-id', 'f-name', 'f-desc', 'f-img'].forEach(id => {
     document.getElementById(id).value = '';
   });
-  document.getElementById('f-cat').value = '';
+  document.getElementById('f-cat').value   = '';
   document.getElementById('f-price').value = '';
   document.getElementById('f-badge').value = '';
-  document.getElementById('f-image').value = '';
-  
-  const img = document.getElementById('currentImage');
-  img.src = '';
+  const img     = document.getElementById('imgPrev');
+  img.src       = '';
   img.className = 'img-prev';
-  currentImageBase64 = null;
-  document.getElementById('deleteImageBtn').style.display = 'none';
 }
 
 function openAdd() {
-  currentItemId = null;
   clearForm();
   document.getElementById('modalTitle').textContent = '➕ افزودن آیتم جدید';
   openModal('formModal');
@@ -875,26 +769,22 @@ function openAdd() {
 function openEdit(id) {
   const item = DB.getById(id);
   if (!item) return;
-  
-  currentItemId = id;
   document.getElementById('modalTitle').textContent = '✏️ ویرایش آیتم';
-  document.getElementById('f-id').value = item.id;
-  document.getElementById('f-name').value = item.name;
-  document.getElementById('f-cat').value = item.cat;
+  document.getElementById('f-id').value    = item.id;
+  document.getElementById('f-name').value  = item.name;
+  document.getElementById('f-cat').value   = item.cat;
   document.getElementById('f-price').value = item.price;
-  document.getElementById('f-desc').value = item.desc;
+  document.getElementById('f-desc').value  = item.desc;
   document.getElementById('f-badge').value = item.badge;
-  document.getElementById('f-image').value = '';
-  
-  showCurrentImage(item.img);
-  
+  document.getElementById('f-img').value   = item.img;
+  previewImg();
   openModal('formModal');
 }
 
-async function saveItem() {
-  const id = document.getElementById('f-id').value;
-  const name = document.getElementById('f-name').value.trim();
-  const cat = document.getElementById('f-cat').value;
+function saveItem() {
+  const id    = document.getElementById('f-id').value;
+  const name  = document.getElementById('f-name').value.trim();
+  const cat   = document.getElementById('f-cat').value;
   const price = document.getElementById('f-price').value;
 
   if (!name || !cat || !price) {
@@ -903,27 +793,19 @@ async function saveItem() {
   }
 
   const data = {
-    name: name,
-    cat: cat,
+    name:  name,
+    cat:   cat,
     price: Number(price),
-    desc: document.getElementById('f-desc').value.trim(),
-    badge: document.getElementById('f-badge').value
+    desc:  document.getElementById('f-desc').value.trim(),
+    badge: document.getElementById('f-badge').value,
+    img:   document.getElementById('f-img').value.trim()
   };
 
-  if (currentImageBase64) {
-    data.img = currentImageBase64;
-  }
-
-  let savedItem;
   if (id) {
-    const existingItem = DB.getById(id);
-    if (!data.img && existingItem && existingItem.img) {
-      data.img = existingItem.img;
-    }
-    savedItem = DB.update(id, data);
+    DB.update(id, data);
     showToast(`«${name}» ویرایش شد ✓`);
   } else {
-    savedItem = DB.add(data);
+    DB.add(data);
     showToast(`«${name}» اضافه شد ✓`);
   }
 
@@ -951,11 +833,7 @@ function resetToDefault() {
 
 function clearOrders() {
   if (!confirm('تمام سوابق فروش پاک می‌شوند. ادامه می‌دهید؟')) return;
-  if (typeof Orders !== 'undefined' && Orders.clearAll) {
-    Orders.clearAll();
-  } else {
-    localStorage.setItem('ariana_orders_v1', JSON.stringify([]));
-  }
+  Orders.clearAll();
   showToast('سوابق فروش پاک شد');
   renderSales();
 }
